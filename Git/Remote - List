@@ -1,0 +1,28 @@
+#!/bin/bash
+#
+# Distributed under the terms of GNU GPL version 2
+#
+
+function show_remote() {
+	echo "# Fetching information"
+	git remote show $selected > $OUTFILE
+}
+
+OUTFILE=`mktemp -t git_remote.XXXXXX`
+
+#git remote -v > $OUTFILE
+output=`git remote -v`
+
+#zenity --text-info --title="Git: Remote List" --filename=$OUTFILE --width=600 --height=400 --window-icon="`dirname $0`/git.png"
+
+zenity --list --title="Git: Remote List" --text="Remote repositories" --window-icon="`dirname $0`/git.png" --column="Name" --column="URL" --column="Type" $output > $OUTFILE
+
+selected=`cat $OUTFILE`
+#zenity --info --title="debug" --text="selected=$selected"
+
+if [ ! -z "$selected" ]; then
+	show_remote | zenity --progress --title="Git: Remote Information" --pulsate --auto-close --auto-kill --window-icon="`dirname $0`/git.png"
+	zenity --text-info --title="Git: Remote Information" --filename=$OUTFILE --width=600 --height=400 --window-icon="`dirname $0`/git.png"
+fi
+
+rm -f $OUTFILE

@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+# Distributed under the terms of GNU GPL version 2
+#
+
+OUTFILE=`mktemp -t git_branch.XXXXXX`
+
+git branch -a > $OUTFILE
+
+zenity --text-info --title="Git: Branch List" --filename=$OUTFILE --width=600 --height=400 --window-icon="`dirname $0`/git.png"
+
+rm -f $OUTFILE
